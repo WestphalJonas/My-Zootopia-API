@@ -1,6 +1,11 @@
 import json
+import os
 import requests
 from typing import Any
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 API_URL = "https://api.api-ninjas.com/v1/animals"
@@ -89,6 +94,11 @@ def fetch_data(
     if use_json:
         return load_data(ANIMALS_FILE_PATH)
     else:
+        # Use API key from environment variable if not provided
         if not api_key:
-            raise ValueError("API key is required for API mode")
+            api_key = os.getenv("API_KEY")
+            if not api_key:
+                raise ValueError(
+                    "API key is required for API mode. Please set API_KEY in .env file or provide it as parameter"
+                )
         return fetch_animals_from_api(animal_name, api_key)

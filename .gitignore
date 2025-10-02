@@ -1,4 +1,6 @@
 .vscode
-_pycache_
+__pycache__
 .mypy_cache
 .venv
+.env
+uv.lock

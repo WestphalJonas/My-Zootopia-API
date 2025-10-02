@@ -249,10 +249,6 @@ def main():
 
         # Use data fetcher to get animal data
         if not args.use_json:
-            if not args.api_key:
-                raise ValueError(
-                    "API key is required. Please provide it using --api-key"
-                )
             print(f"Fetching animal data for '{animal_name}' from API...")
             animal_data = data_fetcher.fetch_data(
                 animal_name, args.api_key, use_json=False
