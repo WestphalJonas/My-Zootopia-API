@@ -1,0 +1,232 @@
+<html>
+    <head>
+        <style>
+        @gray-darker:               #444444;
+        @gray-dark:                 #696969;
+        @gray:                      #999999;
+        @gray-light:                #cccccc;
+        @gray-lighter:              #ececec;
+        @gray-lightest:             lighten(@gray-lighter,4%);
+
+
+        html {
+          background-color: #ffe9e9;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 40pt;
+            font-weight: normal;
+        }
+
+        body {
+          font-family: 'Roboto','Helvetica Neue', Helvetica, Arial, sans-serif;
+          font-style: normal;
+          font-weight: 400;
+          letter-spacing: 0;
+          padding: 1rem;
+          text-rendering: optimizeLegibility;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          -moz-font-feature-settings: "liga" on;
+          width: 900px;
+          margin: auto;
+        }
+
+        .cards {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .cards__item {
+          background-color: white;
+          border-radius: 0.25rem;
+          box-shadow: 0 20px 40px -14px rgba(0,0,0,0.25);
+          overflow: hidden;
+          padding: 1rem;
+          margin: 50px;
+        }
+
+        .card__title {
+          color: @gray-dark;
+          font-size: 1.25rem;
+          font-weight: 300;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+        }
+
+        .card__text {
+          flex: 1 1 auto;
+          font-size: 0.95rem;
+          line-height: 2;
+          margin-bottom: 1.25rem;
+        }
+
+        .card__details {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .card__detail {
+          margin-bottom: 0.35rem;
+        }
+
+        .card__detail strong {
+          color: @gray-darker;
+        }
+
+        .card__detail:last-child {
+          margin-bottom: 0;
+        }
+
+        .card__detail--empty {
+          color: @gray;
+          font-style: italic;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>My Animal Repository</h1>
+        <ul class="cards">
+                <li class="cards__item">
+        <div class="card__title">Arctic Fox</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Carnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> Eurasia, Europe, North-America</li>
+            <li class="card__detail"><strong>Type:</strong> Mammal</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> 7 - 10 years</li>
+            <li class="card__detail"><strong>Weight:</strong> 1.4kg - 9.4kg (3lbs - 21lbs)</li>
+            <li class="card__detail"><strong>Top speed:</strong> 30 mph</li>
+            </ul>
+        </div>
+    </li>
+    <li class="cards__item">
+        <div class="card__title">Cross Fox</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Carnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> North-America</li>
+            <li class="card__detail"><strong>Type:</strong> mammal</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> 10 to 15 years in captivity, seven years in the wild</li>
+            <li class="card__detail"><strong>Top speed:</strong> 31 mph</li>
+            </ul>
+        </div>
+    </li>
+    <li class="cards__item">
+        <div class="card__title">Darwin’s fox</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Omnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> South-America</li>
+            <li class="card__detail"><strong>Type:</strong> Mammal</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> Seven years</li>
+            <li class="card__detail"><strong>Weight:</strong> 4 to 8.7 pounds</li>
+            <li class="card__detail"><strong>Top speed:</strong> 45 mph</li>
+            </ul>
+        </div>
+    </li>
+    <li class="cards__item">
+        <div class="card__title">Fennec Fox</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Omnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> Africa, Asia</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> 10 - 14 years</li>
+            <li class="card__detail"><strong>Weight:</strong> 1kg - 1.5kg (2.2lbs - 3.3lbs)</li>
+            <li class="card__detail"><strong>Top speed:</strong> 25 mph</li>
+            </ul>
+        </div>
+    </li>
+    <li class="cards__item">
+        <div class="card__title">Fox</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Carnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> Africa, Asia, Eurasia, Europe, North-America</li>
+            <li class="card__detail"><strong>Type:</strong> Mammal</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> 3 - 11 years</li>
+            <li class="card__detail"><strong>Weight:</strong> 5kg - 11kg (11lbs - 24lbs)</li>
+            <li class="card__detail"><strong>Top speed:</strong> 29 mph</li>
+            </ul>
+        </div>
+    </li>
+    <li class="cards__item">
+        <div class="card__title">Fox Squirrel</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Omnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> Central-America, North-America</li>
+            <li class="card__detail"><strong>Type:</strong> rodent</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> 6-12.6 years</li>
+            <li class="card__detail"><strong>Top speed:</strong> 17 mph</li>
+            </ul>
+        </div>
+    </li>
+    <li class="cards__item">
+        <div class="card__title">Gray Fox</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Omnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> Central-America, North-America, South-America</li>
+            <li class="card__detail"><strong>Type:</strong> Mammal</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> 6-12 years</li>
+            <li class="card__detail"><strong>Weight:</strong> 3.2-6.4kg (7-14lbs)</li>
+            <li class="card__detail"><strong>Top speed:</strong> 28 mph</li>
+            </ul>
+        </div>
+    </li>
+    <li class="cards__item">
+        <div class="card__title">Kit Fox</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Omnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> Central-America, North-America</li>
+            <li class="card__detail"><strong>Type:</strong> mammal</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> seven years in the wild. 12 years in captivity</li>
+            <li class="card__detail"><strong>Weight:</strong> 4.5 to five pounds</li>
+            <li class="card__detail"><strong>Top speed:</strong> 25 mph</li>
+            </ul>
+        </div>
+    </li>
+    <li class="cards__item">
+        <div class="card__title">Marble Fox</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Omnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> North-America</li>
+            <li class="card__detail"><strong>Type:</strong> Mammal</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> Up to 15 years</li>
+            <li class="card__detail"><strong>Weight:</strong> 1-10kg (3-21lbs)</li>
+            <li class="card__detail"><strong>Top speed:</strong> 30 mph</li>
+            </ul>
+        </div>
+    </li>
+    <li class="cards__item">
+        <div class="card__title">Tibetan Fox</div>
+        <div class="card__text">
+            <ul class="card__details">
+            <li class="card__detail"><strong>Diet:</strong> Carnivore</li>
+            <li class="card__detail"><strong>Locations:</strong> Asia</li>
+            <li class="card__detail"><strong>Type:</strong> Mammal</li>
+            <li class="card__detail"><strong>Skin type:</strong> Fur</li>
+            <li class="card__detail"><strong>Lifespan:</strong> 8-10 years</li>
+            <li class="card__detail"><strong>Weight:</strong> 8-12 lbs (4-5 kg)</li>
+            <li class="card__detail"><strong>Top speed:</strong> 44 mph</li>
+            </ul>
+        </div>
+    </li>
+        </ul>
+    </body>
+</html>
