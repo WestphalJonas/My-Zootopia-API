@@ -7,8 +7,6 @@ from typing import Any, Generator
 TEMPLATE_FILE_PATH = "animals_template.html"
 
 
-
-
 def load_text(file_path: str) -> str:
     """Load plain text content from a file.
 
@@ -256,7 +254,9 @@ def main():
                     "API key is required. Please provide it using --api-key"
                 )
             print(f"Fetching animal data for '{animal_name}' from API...")
-            animal_data = data_fetcher.fetch_data(animal_name, args.api_key, use_json=False)
+            animal_data = data_fetcher.fetch_data(
+                animal_name, args.api_key, use_json=False
+            )
             print(f"Found {len(animal_data)} animals")
 
             # Handle case when no animals are found

@@ -3,7 +3,6 @@ import requests
 from typing import Any
 
 
-# Constants
 API_URL = "https://api.api-ninjas.com/v1/animals"
 ANIMALS_FILE_PATH = "animals_data.json"
 
@@ -53,15 +52,17 @@ def fetch_animals_from_api(animal_name: str, api_key: str) -> list[dict]:
         raise ValueError(f"Failed to parse API response: {e}") from e
 
 
-def fetch_data(animal_name: str, api_key: str | None = None, use_json: bool = False) -> list[dict]:
+def fetch_data(
+    animal_name: str, api_key: str | None = None, use_json: bool = False
+) -> list[dict]:
     """
     Fetches the animals data for the animal 'animal_name'.
-    
+
     Args:
         animal_name (str): Name of the animal to search for.
         api_key (str, optional): API key for API-Ninjas. Required if use_json=False.
         use_json (bool): If True, load data from JSON file instead of API.
-    
+
     Returns:
         list[dict]: A list of animals, each animal is a dictionary:
         {
@@ -76,7 +77,7 @@ def fetch_data(animal_name: str, api_key: str | None = None, use_json: bool = Fa
                 ...
             }
         }
-    
+
     Raises:
         ValueError: If API key is required but not provided, or if animal_name is empty.
         FileNotFoundError: If JSON file is not found when use_json=True.
@@ -84,7 +85,7 @@ def fetch_data(animal_name: str, api_key: str | None = None, use_json: bool = Fa
     """
     if not animal_name or not animal_name.strip():
         raise ValueError("Animal name cannot be empty")
-    
+
     if use_json:
         return load_data(ANIMALS_FILE_PATH)
     else:
