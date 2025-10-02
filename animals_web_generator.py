@@ -243,13 +243,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument(
         "--animal-name",
-        default="Fox",
-        help="Animal name to search for in API (default: Fox).",
+        help="Animal name to search for in API (if not provided, will prompt user).",
     )
     parser.add_argument(
-        "--use-api",
+        "--use-json",
         action="store_true",
-        help="Use API instead of JSON file for data.",
+        help="Use JSON file instead of API for data.",
     )
     return parser.parse_args(argv)
 
@@ -264,12 +263,22 @@ def main():
         if not template_path.exists():
             raise FileNotFoundError(f"Template file not found: {template_path}")
 
-        # Use API or JSON file based on --use-api flag
-        if args.use_api:
+        # Get animal name from user input or command line argument
+        if args.animal_name:
+            animal_name = args.animal_name
+        else:
+            animal_name = input("Enter a name of an animal: ").strip()
+            if not animal_name:
+                raise ValueError("Animal name cannot be empty")
+
+        # Use API by default, fall back to JSON file if --use-json flag is provided
+        if not args.use_json:
             if not args.api_key:
-                raise ValueError("API key is required when using --use-api flag")
-            print(f"Fetching animal data for '{args.animal_name}' from API...")
-            animal_data = fetch_animals_from_api(args.animal_name, args.api_key)
+                raise ValueError(
+                    "API key is required. Please provide it using --api-key"
+                )
+            print(f"Fetching animal data for '{animal_name}' from API...")
+            animal_data = fetch_animals_from_api(animal_name, args.api_key)
             print(f"Found {len(animal_data)} animals")
         else:
             data_path = Path(args.data)
@@ -308,7 +317,7 @@ def main():
 
         output_path = Path(args.output)
         save_data(str(output_path), html)
-        print(f"{output_path.name} updated.")
+        print(f"Website was successfully generated to the file {output_path.name}.")
     except FileNotFoundError as exc:
         print(str(exc))
         sys.exit(1)
