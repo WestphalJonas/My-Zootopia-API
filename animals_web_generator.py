@@ -1,58 +1,12 @@
-import json
 import argparse
 import sys
-import requests
+import data_fetcher
 from pathlib import Path
 from typing import Any, Generator
 
-ANIMALS_FILE_PATH = "animals_data.json"
 TEMPLATE_FILE_PATH = "animals_template.html"
-API_URL = "https://api.api-ninjas.com/v1/animals"
 
 
-def load_data(file_path: str) -> Any:
-    """Load JSON data from a file.
-
-    Args:
-        file_path (str): Path to the JSON file.
-
-    Returns:
-        Any: Parsed Python object (list or dict).
-    """
-    with open(file_path, "r", encoding="UTF-8") as handle:
-        return json.load(handle)
-
-
-def fetch_animals_from_api(animal_name: str, api_key: str) -> list[dict]:
-    """Fetch animal data from the API-Ninjas API.
-
-    Args:
-        animal_name (str): Name of the animal to search for.
-        api_key (str): API key for authentication.
-
-    Returns:
-        list[dict]: List of animal dictionaries from the API.
-
-    Raises:
-        requests.RequestException: If the API request fails.
-        ValueError: If the API returns an error or no data.
-    """
-    headers = {"X-Api-Key": api_key}
-    params = {"name": animal_name}
-
-    try:
-        response = requests.get(API_URL, headers=headers, params=params, timeout=10)
-        response.raise_for_status()
-
-        data = response.json()
-        if not isinstance(data, list):
-            raise ValueError(f"Unexpected API response format: {type(data)}")
-
-        return data
-    except requests.exceptions.RequestException as e:
-        raise requests.RequestException(f"API request failed: {e}")
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Failed to parse API response: {e}")
 
 
 def load_text(file_path: str) -> str:
@@ -238,7 +192,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate animals HTML page.")
     parser.add_argument(
         "--data",
-        default=ANIMALS_FILE_PATH,
+        default="animals_data.json",
         help="Path to animals JSON data (default: animals_data.json)",
     )
     parser.add_argument(
@@ -295,14 +249,14 @@ def main():
             if not animal_name:
                 raise ValueError("Animal name cannot be empty")
 
-        # Use API by default, fall back to JSON file if --use-json flag is provided
+        # Use data fetcher to get animal data
         if not args.use_json:
             if not args.api_key:
                 raise ValueError(
                     "API key is required. Please provide it using --api-key"
                 )
             print(f"Fetching animal data for '{animal_name}' from API...")
-            animal_data = fetch_animals_from_api(animal_name, args.api_key)
+            animal_data = data_fetcher.fetch_data(animal_name, args.api_key, use_json=False)
             print(f"Found {len(animal_data)} animals")
 
             # Handle case when no animals are found
@@ -325,7 +279,7 @@ def main():
             data_path = Path(args.data)
             if not data_path.exists():
                 raise FileNotFoundError(f"Data file not found: {data_path}")
-            animal_data = load_data(str(data_path))
+            animal_data = data_fetcher.fetch_data(animal_name, use_json=True)
 
         if args.list_skin_types:
             skin_types = list_skin_types(animal_data)
@@ -362,15 +316,13 @@ def main():
     except FileNotFoundError as exc:
         print(str(exc))
         sys.exit(1)
-    except json.JSONDecodeError as exc:
-        print(f"Failed to parse JSON: {exc}")
-        sys.exit(1)
     except ValueError as exc:
-        print(str(exc))
-        sys.exit(2)
-    except requests.RequestException as exc:
-        print(f"API request failed: {exc}")
-        sys.exit(3)
+        if "API request failed" in str(exc):
+            print(f"API request failed: {exc}")
+            sys.exit(3)
+        else:
+            print(str(exc))
+            sys.exit(2)
 
 
 if __name__ == "__main__":
