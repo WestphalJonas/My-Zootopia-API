@@ -167,6 +167,30 @@ def yield_data(data: list[dict]) -> Generator[str, None, None]:
         yield serialize_animal(animal)
 
 
+def create_error_message(animal_name: str) -> str:
+    """Create an HTML error message for when no animals are found.
+
+    Args:
+        animal_name (str): The animal name that was searched for.
+
+    Returns:
+        str: HTML string with error message.
+    """
+    return f"""
+    <li class="cards__item">
+        <div class="card__title">No Results Found</div>
+        <div class="card__text">
+            <h2 style="color: #e74c3c; text-align: center; margin: 20px 0;">
+                The animal "{animal_name}" doesn't exist.
+            </h2>
+            <p style="text-align: center; color: #7f8c8d; font-style: italic;">
+                Please try searching for a different animal name.
+            </p>
+        </div>
+    </li>
+    """
+
+
 def replace_html_content(template_file_path: str, placeholder: str, data: str) -> str:
     """Replace a placeholder in an HTML template with data.
 
@@ -280,6 +304,23 @@ def main():
             print(f"Fetching animal data for '{animal_name}' from API...")
             animal_data = fetch_animals_from_api(animal_name, args.api_key)
             print(f"Found {len(animal_data)} animals")
+
+            # Handle case when no animals are found
+            if not animal_data:
+                print(
+                    f"No animals found for '{animal_name}'. Generating error message..."
+                )
+                # Generate HTML with error message instead of animal data
+                error_html = create_error_message(animal_name)
+                template = load_text(str(template_path))
+                html = template.replace("__REPLACE_ANIMALS_INFO__", error_html)
+
+                output_path = Path(args.output)
+                save_data(str(output_path), html)
+                print(
+                    f"Website was successfully generated to the file {output_path.name}."
+                )
+                return
         else:
             data_path = Path(args.data)
             if not data_path.exists():
