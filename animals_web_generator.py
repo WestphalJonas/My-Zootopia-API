@@ -1,11 +1,13 @@
 import json
 import argparse
 import sys
+import requests
 from pathlib import Path
 from typing import Any, Generator
 
 ANIMALS_FILE_PATH = "animals_data.json"
 TEMPLATE_FILE_PATH = "animals_template.html"
+API_URL = "https://api.api-ninjas.com/v1/animals"
 
 
 def load_data(file_path: str) -> Any:
@@ -19,6 +21,38 @@ def load_data(file_path: str) -> Any:
     """
     with open(file_path, "r", encoding="UTF-8") as handle:
         return json.load(handle)
+
+
+def fetch_animals_from_api(animal_name: str, api_key: str) -> list[dict]:
+    """Fetch animal data from the API-Ninjas API.
+
+    Args:
+        animal_name (str): Name of the animal to search for.
+        api_key (str): API key for authentication.
+
+    Returns:
+        list[dict]: List of animal dictionaries from the API.
+
+    Raises:
+        requests.RequestException: If the API request fails.
+        ValueError: If the API returns an error or no data.
+    """
+    headers = {"X-Api-Key": api_key}
+    params = {"name": animal_name}
+
+    try:
+        response = requests.get(API_URL, headers=headers, params=params, timeout=10)
+        response.raise_for_status()
+
+        data = response.json()
+        if not isinstance(data, list):
+            raise ValueError(f"Unexpected API response format: {type(data)}")
+
+        return data
+    except requests.exceptions.RequestException as e:
+        raise requests.RequestException(f"API request failed: {e}")
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Failed to parse API response: {e}")
 
 
 def load_text(file_path: str) -> str:
@@ -91,7 +125,8 @@ def list_skin_types(data: list[dict]) -> list[str]:
     known = sorted(value for value in values if value != "Unknown")
     if "Unknown" in values:
         known.append("Unknown")
-    return known
+    # Add "All" option at the beginning
+    return ["All"] + known
 
 
 def prompt_skin_type(options: list[str]) -> str:
@@ -114,6 +149,8 @@ def prompt_skin_type(options: list[str]) -> str:
 
 def filter_by_skin_type(data: list[dict], skin_type: str) -> list[dict]:
     """Return only animals matching the selected skin type."""
+    if skin_type == "All":
+        return data
     return [animal for animal in data if extract_skin_type(animal) == skin_type]
 
 
@@ -164,7 +201,7 @@ def generate_html(
         Final HTML string.
     """
     animals = data
-    if skin_type:
+    if skin_type and skin_type != "All":
         animals = filter_by_skin_type(data, skin_type)
         if not animals:
             raise ValueError(f"No animals found for skin type '{skin_type}'.")
@@ -193,12 +230,26 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--skin-type",
         dest="skin_type",
-        help="Filter by skin type (skips interactive prompt).",
+        help="Filter by skin type (skips interactive prompt). Use 'All' to show all skin types.",
     )
     parser.add_argument(
         "--list-skin-types",
         action="store_true",
         help="List available skin types and exit.",
+    )
+    parser.add_argument(
+        "--api-key",
+        help="API key for API-Ninjas (required for API mode).",
+    )
+    parser.add_argument(
+        "--animal-name",
+        default="Fox",
+        help="Animal name to search for in API (default: Fox).",
+    )
+    parser.add_argument(
+        "--use-api",
+        action="store_true",
+        help="Use API instead of JSON file for data.",
     )
     return parser.parse_args(argv)
 
@@ -208,15 +259,23 @@ def main():
     args = parse_args(sys.argv[1:])
 
     try:
-        data_path = Path(args.data)
         template_path = Path(args.template)
 
-        if not data_path.exists():
-            raise FileNotFoundError(f"Data file not found: {data_path}")
         if not template_path.exists():
             raise FileNotFoundError(f"Template file not found: {template_path}")
 
-        animal_data = load_data(str(data_path))
+        # Use API or JSON file based on --use-api flag
+        if args.use_api:
+            if not args.api_key:
+                raise ValueError("API key is required when using --use-api flag")
+            print(f"Fetching animal data for '{args.animal_name}' from API...")
+            animal_data = fetch_animals_from_api(args.animal_name, args.api_key)
+            print(f"Found {len(animal_data)} animals")
+        else:
+            data_path = Path(args.data)
+            if not data_path.exists():
+                raise FileNotFoundError(f"Data file not found: {data_path}")
+            animal_data = load_data(str(data_path))
 
         if args.list_skin_types:
             skin_types = list_skin_types(animal_data)
@@ -238,6 +297,8 @@ def main():
                 for index, skin_type in enumerate(skin_types, start=1):
                     print(f"{index}. {skin_type}")
                 selected_skin_type = prompt_skin_type(skin_types)
+            else:
+                selected_skin_type = "All"
 
         html = generate_html(
             data=animal_data,
@@ -257,6 +318,9 @@ def main():
     except ValueError as exc:
         print(str(exc))
         sys.exit(2)
+    except requests.RequestException as exc:
+        print(f"API request failed: {exc}")
+        sys.exit(3)
 
 
 if __name__ == "__main__":
